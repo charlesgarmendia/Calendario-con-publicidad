@@ -1,4 +1,4 @@
-const CACHE_NAME = 'mariangel-calendar-v1.8';
+const CACHE_NAME = 'CALENDARIO TOTAL K-POP-v1.8';
 const urlsToCache = [
   '/',
   '/manifest.json',
