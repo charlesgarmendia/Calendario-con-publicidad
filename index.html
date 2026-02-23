@@ -592,7 +592,7 @@
             box-shadow: 0 5px 0 #6c3483;
         }
 
-        /* MODAL DE PUBLICIDAD - NUEVO */
+        /* MODAL DE PUBLICIDAD - Versión Monetag */
         .ad-modal {
             display: none;
             position: fixed;
@@ -600,7 +600,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.9);
+            background: rgba(0, 0, 0, 0.95);
             z-index: 2000;
             justify-content: center;
             align-items: center;
@@ -614,18 +614,26 @@
         .ad-container {
             width: 100%;
             height: 90%;
-            background: white;
+            background: linear-gradient(145deg, #4a90e2, #2a5f9e);
             border-radius: 20px;
             overflow: hidden;
             position: relative;
             border: 3px solid var(--gold);
             box-shadow: 0 0 30px var(--gold);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-family: 'Segoe UI', sans-serif;
+            text-align: center;
+            padding: 20px;
         }
 
         .ad-close-btn {
             position: absolute;
-            top: 10px;
-            right: 10px;
+            top: 20px;
+            right: 20px;
             width: 40px;
             height: 40px;
             background: var(--red);
@@ -646,23 +654,43 @@
             transform: scale(0.9);
         }
 
-        .ad-webview {
-            width: 100%;
-            height: 100%;
-            border: none;
-        }
-
         .ad-timer {
             position: absolute;
-            bottom: 10px;
-            left: 10px;
+            bottom: 20px;
+            left: 20px;
             background: var(--glass-darker);
             color: white;
-            padding: 5px 15px;
-            border-radius: 20px;
-            font-size: 14px;
+            padding: 8px 20px;
+            border-radius: 30px;
+            font-size: 16px;
             border: 1px solid var(--gold);
             z-index: 2001;
+            font-weight: bold;
+        }
+
+        .ad-spinner {
+            width: 60px;
+            height: 60px;
+            border: 6px solid rgba(255,255,255,0.3);
+            border-top-color: var(--gold);
+            border-radius: 50%;
+            animation: spin 1s infinite linear;
+            margin: 30px auto;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .ad-icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
         }
     </style>
 </head>
@@ -737,11 +765,14 @@
     </div>
 </div>
 
-<!-- MODAL DE PUBLICIDAD - NUEVO -->
+<!-- MODAL DE PUBLICIDAD - Versión Monetag -->
 <div id="adModal" class="ad-modal">
     <div class="ad-close-btn" onclick="closeAd()">✕</div>
-    <div class="ad-container">
-        <iframe id="adIframe" class="ad-webview" src="about:blank" sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox allow-top-navigation"></iframe>
+    <div id="adContainer" class="ad-container">
+        <div class="ad-icon">🎯</div>
+        <h2 style="margin-bottom: 15px; font-size: 24px;">Preparando contenido especial...</h2>
+        <p style="margin-bottom: 25px; opacity: 0.9; font-size: 18px;">Serás redirigido en <span id="timerDisplay">3</span> segundos</p>
+        <div class="ad-spinner"></div>
     </div>
     <div id="adTimer" class="ad-timer">⏱️ 3 seg</div>
 </div>
@@ -783,11 +814,11 @@
     let userImages = JSON.parse(localStorage.getItem('user_album')) || [];
     let currentPreviewImage = '';
     
-    // Variables para publicidad
-    let pendingAction = null; // Para recordar qué hacer después de la publicidad
+    // Variables para publicidad - MONETAG
+    let pendingAction = null;
     let adTimer = 3;
     let adInterval = null;
-    const adLink = "https://otieu.com/4/10534539"; // Tu link de publicidad
+    const monetagLink = "https://otieu.com/4/10534539"; // Tu SmartLink de Monetag
     
     // Variables para PWA
     let deferredPrompt;
@@ -902,41 +933,33 @@
         });
     }
 
-    // MODIFICADO: selectMonth ahora muestra publicidad antes de cambiar de pantalla
+    // Función para seleccionar mes con publicidad
     function selectMonth(monthIndex) {
-        // Guardar la acción pendiente
         pendingAction = {
             type: 'selectMonth',
             monthIndex: monthIndex
         };
-        
-        // Mostrar publicidad
         showAd();
     }
 
-    // MODIFICADO: openDay ahora muestra publicidad antes de abrir la nota
+    // Función para abrir día con publicidad
     function openDay(day) {
-        // Guardar la acción pendiente
         pendingAction = {
             type: 'openDay',
             day: day
         };
-        
-        // Mostrar publicidad
         showAd();
     }
 
-    // NUEVA FUNCIÓN: Mostrar publicidad
+    // FUNCIÓN PRINCIPAL DE PUBLICIDAD - Versión Monetag
     function showAd() {
         const adModal = document.getElementById('adModal');
-        const adIframe = document.getElementById('adIframe');
+        const timerDisplay = document.getElementById('timerDisplay');
         const timerDiv = document.getElementById('adTimer');
-        
-        // Cargar el link de publicidad en el iframe
-        adIframe.src = adLink;
         
         // Resetear timer
         adTimer = 3;
+        timerDisplay.textContent = adTimer;
         timerDiv.textContent = `⏱️ ${adTimer} seg`;
         
         // Mostrar modal
@@ -946,53 +969,49 @@
         if (adInterval) clearInterval(adInterval);
         adInterval = setInterval(() => {
             adTimer--;
+            timerDisplay.textContent = adTimer;
             timerDiv.textContent = `⏱️ ${adTimer} seg`;
             
             if (adTimer <= 0) {
                 clearInterval(adInterval);
                 adInterval = null;
+                
+                // Abrir el SmartLink de Monetag en una nueva pestaña
+                window.open(monetagLink, '_blank');
+                
+                // Cerrar modal después de abrir el link
                 closeAd();
             }
         }, 1000);
     }
 
-    // NUEVA FUNCIÓN: Cerrar publicidad
+    // Función para cerrar publicidad
     function closeAd() {
         const adModal = document.getElementById('adModal');
-        const adIframe = document.getElementById('adIframe');
         
-        // Limpiar timer
         if (adInterval) {
             clearInterval(adInterval);
             adInterval = null;
         }
         
-        // Limpiar iframe
-        adIframe.src = 'about:blank';
-        
-        // Ocultar modal
         adModal.classList.remove('active');
         
         // Ejecutar la acción pendiente
         if (pendingAction) {
             if (pendingAction.type === 'selectMonth') {
-                // Ejecutar la selección de mes
                 selectedMonth = pendingAction.monthIndex;
                 selectedYear = currentYear;
                 document.getElementById('selected-month-display').textContent = `${months[pendingAction.monthIndex]} ${currentYear}`;
                 updateDaysScreen();
-                
                 document.getElementById('months-screen').classList.remove('active');
                 document.getElementById('days-screen').classList.add('active');
             } else if (pendingAction.type === 'openDay') {
-                // Ejecutar la apertura del día
                 const noteId = `nota_${pendingAction.day}_${selectedMonth}_${selectedYear}`;
                 document.getElementById('modal-title').textContent = `${pendingAction.day} ${months[selectedMonth]} ${selectedYear}`;
                 document.getElementById('note-text').value = localStorage.getItem(noteId) || "";
                 document.getElementById('note-modal').style.display = "flex";
                 window.currentNoteId = noteId;
             }
-            
             pendingAction = null;
         }
     }
@@ -1210,7 +1229,6 @@
         }
     });
 
-    // Cerrar publicidad haciendo click fuera del contenido
     document.getElementById('adModal').addEventListener('click', (e) => {
         if (e.target === document.getElementById('adModal')) {
             closeAd();
@@ -1232,3 +1250,13 @@
 </script>
 </body>
 </html>
+
+
+
+
+
+
+
+
+
+
