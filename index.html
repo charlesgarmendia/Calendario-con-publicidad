@@ -140,32 +140,33 @@
             100% { transform: scale(1); }
         }
 
-        /* Botón Sin Publicidad - NUEVO */
+        /* Botón Sin Publicidad - MODIFICADO MÁS PEQUEÑO */
         .premium-btn {
             position: fixed;
             bottom: 20px;
             left: 20px;
             background: linear-gradient(145deg, #2a2a40, #1a1a2e);
-            border: 2px solid var(--gold);
+            border: 1px solid var(--gold);
             color: var(--gold);
-            padding: 8px 15px;
-            border-radius: 30px;
-            font-size: 0.9rem;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
             font-weight: bold;
             cursor: pointer;
-            box-shadow: 0 5px 10px rgba(0,0,0,0.5);
+            box-shadow: 0 3px 8px rgba(0,0,0,0.5);
             z-index: 90;
             display: flex;
             align-items: center;
-            gap: 5px;
+            gap: 3px;
             transition: all 0.3s ease;
+            letter-spacing: 0.5px;
         }
 
         .premium-btn.active {
             background: linear-gradient(145deg, #ffd700, #ffa500);
             color: #1a1a2e;
             border-color: white;
-            box-shadow: 0 0 20px gold;
+            box-shadow: 0 0 15px gold;
         }
 
         .premium-btn:active {
@@ -886,15 +887,17 @@
             font-weight: bold;
         }
 
-        /* Upload area */
+        /* Upload area - MODIFICADO PARA MÁS ESPACIO */
         .upload-area {
             display: flex;
             justify-content: center;
-            padding: 10px;
+            padding: 15px 10px 25px 10px; /* Más padding inferior para evitar superposición */
             background: var(--glass);
             backdrop-filter: blur(5px);
-            margin: 10px;
+            margin: 10px 10px 70px 10px; /* Margen inferior grande para el botón premium */
             border-radius: 30px;
+            position: relative;
+            z-index: 20;
         }
 
         .upload-btn {
@@ -1176,7 +1179,7 @@
     </div>
 </div>
 
-<!-- Botón Sin Publicidad - NUEVO -->
+<!-- Botón Sin Publicidad - MODIFICADO MÁS PEQUEÑO -->
 <button class="premium-btn" id="premiumBtn" onclick="openPremiumModal()">⭐ SIN PUBLICIDAD</button>
 
 <!-- Botón de Administrador -->
@@ -1244,7 +1247,7 @@
         const premiumBtn = document.getElementById('premiumBtn');
         if (isPremium()) {
             premiumBtn.classList.add('active');
-            premiumBtn.innerHTML = '⭐ PREMIUM ACTIVO';
+            premiumBtn.innerHTML = '⭐ PREMIUM';
         } else {
             premiumBtn.classList.remove('active');
             premiumBtn.innerHTML = '⭐ SIN PUBLICIDAD';
@@ -1903,6 +1906,7 @@
 
 </body>
 </html>
+
 
 
 
