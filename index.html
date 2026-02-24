@@ -47,9 +47,9 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-size: contain;
-            background-position: center;
-            background-repeat: no-repeat;
+            background-size: cover !important;
+            background-position: center !important;
+            background-repeat: no-repeat !important;
             transition: background-image 0.5s ease-in-out;
             z-index: -1;
         }
@@ -61,7 +61,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.2);
+            background: rgba(0, 0, 0, 0.3);
             z-index: -1;
         }
 
@@ -110,7 +110,7 @@
             text-shadow: 0 0 10px rgba(255,215,0,0.8);
         }
 
-        /* Botón de descarga - AHORA SIEMPRE VISIBLE */
+        /* Botón de descarga */
         .download-btn {
             background: linear-gradient(145deg, #ffd700, #ffa500);
             border: none;
@@ -140,7 +140,7 @@
             100% { transform: scale(1); }
         }
 
-        /* Botón Sin Publicidad - MODIFICADO MÁS PEQUEÑO */
+        /* Botón Sin Publicidad */
         .premium-btn {
             position: fixed;
             bottom: 20px;
@@ -559,7 +559,7 @@
             box-shadow: 0 0 20px rgba(255,215,0,0.5);
         }
 
-        /* Modal de Notas MEJORADO con emojis y alarmas */
+        /* Modal de Notas */
         .modal {
             display: none;
             position: fixed;
@@ -784,7 +784,7 @@
             50% { transform: translateY(-15px); }
         }
 
-        /* Modal Premium - NUEVO */
+        /* Modal Premium */
         .premium-modal {
             display: none;
             position: fixed;
@@ -887,14 +887,14 @@
             font-weight: bold;
         }
 
-        /* Upload area - MODIFICADO PARA MÁS ESPACIO */
+        /* Upload area */
         .upload-area {
             display: flex;
             justify-content: center;
-            padding: 15px 10px 25px 10px; /* Más padding inferior para evitar superposición */
+            padding: 15px 10px 25px 10px;
             background: var(--glass);
             backdrop-filter: blur(5px);
-            margin: 10px 10px 70px 10px; /* Margen inferior grande para el botón premium */
+            margin: 10px 10px 70px 10px;
             border-radius: 30px;
             position: relative;
             z-index: 20;
@@ -940,7 +940,7 @@
             cursor: pointer;
         }
 
-        /* Modal para pedir nombre - MODIFICADO */
+        /* Modal para pedir nombre */
         .name-modal {
             display: none;
             position: fixed;
@@ -1028,7 +1028,7 @@
         </div>
     </div>
 
-    <!-- Botón de descarga - SIEMPRE VISIBLE AL INICIO -->
+    <!-- Botón de descarga -->
     <button id="downloadAppBtn" class="download-btn" onclick="installPWA()">📲 DESCARGAR APP</button>
 
     <!-- Banner de notificaciones -->
@@ -1080,7 +1080,7 @@
     </div>
 </div>
 
-<!-- Modal de Notas con emojis, alarmas y botón eliminar -->
+<!-- Modal de Notas -->
 <div id="note-modal" class="modal">
     <div class="modal-content">
         <div class="modal-title" id="modal-title">1 Enero 2026</div>
@@ -1138,7 +1138,6 @@
             <button class="btn btn-primary" style="flex:1;" onclick="closeModal()">Cerrar</button>
         </div>
         
-        <!-- NUEVO BOTÓN ELIMINAR EVENTO -->
         <button class="btn btn-danger" style="width: 100%;" onclick="deleteCurrentEvent()">🗑️ ELIMINAR EVENTO</button>
     </div>
 </div>
@@ -1156,7 +1155,7 @@
     <div id="adTimer" class="ad-timer">⏱️ 3 seg</div>
 </div>
 
-<!-- Modal para pedir nombre - AHORA SOLO DESPUÉS DE INSTALAR -->
+<!-- Modal para pedir nombre -->
 <div id="nameModal" class="name-modal">
     <div class="name-modal-content">
         <div class="name-modal-title" id="nameModalTitle">👋 ¡Bienvenido a la App!</div>
@@ -1165,7 +1164,7 @@
     </div>
 </div>
 
-<!-- MODAL PREMIUM - NUEVO -->
+<!-- MODAL PREMIUM -->
 <div id="premiumModal" class="premium-modal">
     <div class="premium-modal-content">
         <div class="premium-modal-title">⭐ SIN PUBLICIDAD</div>
@@ -1174,12 +1173,12 @@
         <button class="premium-modal-btn" onclick="activatePremium()">Activar</button>
         <button class="premium-modal-btn secondary" onclick="closePremiumModal()">Cancelar</button>
         <div class="premium-key-list">
-            CONTACTANOS PARA RECIBIR TU CUENTA PREMIUN LIBRE DE PUBLICIDAD: <span>charlesgarmendia 009@gmail.com</span> • <span>SOLICITA TU CUENTA  PREMIUN</span> • 
+            CONTACTANOS PARA RECIBIR TU CUENTA PREMIUN LIBRE DE PUBLICIDAD: <span>charlesgarmendia 009@gmail.com</span> • <span>SOLICITA TU CUENTA PREMIUN</span> • 
         </div>
     </div>
 </div>
 
-<!-- Botón Sin Publicidad - MODIFICADO MÁS PEQUEÑO -->
+<!-- Botón Sin Publicidad -->
 <button class="premium-btn" id="premiumBtn" onclick="openPremiumModal()">⭐ SIN PUBLICIDAD</button>
 
 <!-- Botón de Administrador -->
@@ -1207,7 +1206,7 @@
 
 <script>
     // Configuración
-    const totalDefaultImages = 50; // Número máximo de imágenes por defecto (1.png a 50.png)
+    const totalDefaultImages = 50;
     const months = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
     const monthsShort = ["ENE", "FEB", "MAR", "ABR", "MAY", "JUN", "JUL", "AGO", "SEP", "OCT", "NOV", "DIC"];
     
@@ -1220,7 +1219,7 @@
     let currentPreviewImage = '';
     let selectedEmoji = '';
     
-    // NUEVO: Mapa de imágenes por mes
+    // Mapa de imágenes por mes
     let monthImages = JSON.parse(localStorage.getItem('month_images')) || {};
     
     // Variables para publicidad
@@ -1237,16 +1236,13 @@
     let deferredPrompt;
     const downloadBtn = document.getElementById('downloadAppBtn');
     
-    // NUEVO: Intervalo para rotación de imágenes
+    // Intervalo para rotación de imágenes
     let rotationInterval = null;
 
     // ===== FUNCIÓN PARA VERIFICAR PREMIUM =====
     function isPremium() {
         const premiumData = JSON.parse(localStorage.getItem('premium_status') || '{"active":false,"expires":0}');
-        if (premiumData.active && premiumData.expires > Date.now()) {
-            return true;
-        }
-        return false;
+        return premiumData.active && premiumData.expires > Date.now();
     }
 
     function updatePremiumButton() {
@@ -1278,7 +1274,7 @@
         const validKeys = ['PREMIUM2025', 'VIP2026', 'FAMILY2027', 'ELITE2028'];
         
         if (validKeys.includes(key)) {
-            const expires = Date.now() + (365 * 24 * 60 * 60 * 1000); // 1 año
+            const expires = Date.now() + (365 * 24 * 60 * 60 * 1000);
             localStorage.setItem('premium_status', JSON.stringify({
                 active: true,
                 expires: expires,
@@ -1314,7 +1310,6 @@
         document.getElementById('nameModal').classList.add('active');
     }
 
-    // MODIFICADO: Solo pide nombre después de instalar
     function checkFirstTimeUser() {
         if (isAppInstalled()) {
             const userName = localStorage.getItem('user_name');
@@ -1338,8 +1333,7 @@
 
     // ===== FUNCIONES PWA =====
     function isAppInstalled() {
-        return window.matchMedia('(display-mode: standalone)').matches || 
-               window.navigator.standalone === true;
+        return window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
     }
 
     function updateDownloadButtonVisibility() {
@@ -1360,7 +1354,7 @@
         console.log('✅ PWA instalada correctamente');
         deferredPrompt = null;
         updateDownloadButtonVisibility();
-        checkFirstTimeUser(); // Ahora pide nombre después de instalar
+        checkFirstTimeUser();
     });
 
     function installPWA() {
@@ -1383,7 +1377,6 @@
 
     // ===== FUNCIONES DE PUBLICIDAD =====
     function showAd() {
-        // Si es premium, no mostrar publicidad
         if (isPremium()) {
             if (pendingAction) {
                 if (pendingAction.type === 'selectMonth') {
@@ -1393,6 +1386,7 @@
                     updateDaysScreen();
                     document.getElementById('months-screen').classList.remove('active');
                     document.getElementById('days-screen').classList.add('active');
+                    updateBackgroundImage();
                 }
                 pendingAction = null;
             }
@@ -1442,72 +1436,92 @@
                 updateDaysScreen();
                 document.getElementById('months-screen').classList.remove('active');
                 document.getElementById('days-screen').classList.add('active');
+                updateBackgroundImage();
             }
             pendingAction = null;
         }
     }
 
-    // ===== NUEVAS FUNCIONES PARA GESTIÓN DE IMÁGENES POR MES =====
+    // ===== FUNCIONES DE GESTIÓN DE IMÁGENES =====
     
-    // Obtener una imagen aleatoria (de usuario o por defecto)
     function getRandomImage() {
-        if (userImages.length > 0 && Math.random() > 0.3) {
-            // 70% de probabilidad de usar imagen de usuario si hay disponibles
-            return userImages[Math.floor(Math.random() * userImages.length)];
-        } else {
-            // Usar imagen por defecto de la raíz
-            const r = Math.floor(Math.random() * totalDefaultImages) + 1;
-            return `${r}.png`;
+        if (userImages.length > 0) {
+            if (Math.random() > 0.3) {
+                return userImages[Math.floor(Math.random() * userImages.length)];
+            }
         }
+        const r = Math.floor(Math.random() * totalDefaultImages) + 1;
+        return `${r}.png`;
     }
     
-    // Obtener imagen para un mes específico
     function getImageForMonth(monthIndex) {
         const monthKey = `month_${monthIndex}_${currentYear}`;
         
-        // Si ya tenemos una imagen asignada para este mes, usarla
         if (monthImages[monthKey]) {
             return monthImages[monthKey];
         }
         
-        // Si no, asignar una nueva imagen aleatoria
         const newImage = getRandomImage();
         monthImages[monthKey] = newImage;
         localStorage.setItem('month_images', JSON.stringify(monthImages));
         return newImage;
     }
     
-    // Rotar todas las imágenes de los meses
     function rotateAllMonthImages() {
         console.log('🔄 Rotando imágenes de los meses...');
         
-        // Generar nuevas imágenes para todos los meses
         months.forEach((_, index) => {
             const monthKey = `month_${index}_${currentYear}`;
             monthImages[monthKey] = getRandomImage();
         });
         
-        // Guardar en localStorage
         localStorage.setItem('month_images', JSON.stringify(monthImages));
         
-        // Actualizar la pantalla si estamos en meses
         if (document.getElementById('months-screen').classList.contains('active')) {
             renderMonths();
         }
+        
+        if (document.getElementById('days-screen').classList.contains('active')) {
+            updateBackgroundImage();
+        }
     }
     
-    // Iniciar rotación automática cada 10 minutos
     function startImageRotation() {
         if (rotationInterval) {
             clearInterval(rotationInterval);
         }
         
-        // Rotar cada 10 minutos (600000 ms)
         rotationInterval = setInterval(() => {
             rotateAllMonthImages();
-        }, 600000); // 10 minutos
+        }, 600000);
         
         console.log('⏰ Rotación de imágenes iniciada (cada 10 minutos)');
+    }
+
+    function updateBackgroundImage() {
+        const bgElement = document.getElementById('dynamic-background');
+        
+        if (document.getElementById('months-screen').classList.contains('active')) {
+            const randomMonth = Math.floor(Math.random() * 12);
+            const monthImage = getImageForMonth(randomMonth);
+            bgElement.style.backgroundImage = `url('${monthImage}')`;
+        } else if (document.getElementById('days-screen').classList.contains('active')) {
+            const monthKey = `month_${selectedMonth}_${selectedYear}`;
+            let monthImage = monthImages[monthKey];
+            
+            if (!monthImage) {
+                monthImage = getRandomImage();
+                monthImages[monthKey] = monthImage;
+                localStorage.setItem('month_images', JSON.stringify(monthImages));
+            }
+            
+            bgElement.style.backgroundImage = `url('${monthImage}')`;
+            
+            const previewElement = document.getElementById('day-preview');
+            if (previewElement) {
+                previewElement.src = monthImage;
+            }
+        }
     }
 
     // ===== FUNCIONES DEL CALENDARIO =====
@@ -1519,7 +1533,6 @@
             const card = document.createElement('div');
             card.className = 'month-card';
             
-            // Obtener imagen específica para este mes
             const monthImage = getImageForMonth(index);
             card.style.backgroundImage = `url('${monthImage}')`;
             card.onclick = () => selectMonth(index);
@@ -1536,6 +1549,8 @@
             
             grid.appendChild(card);
         });
+        
+        updateBackgroundImage();
     }
 
     function selectMonth(monthIndex) {
@@ -1550,6 +1565,7 @@
         document.getElementById('days-screen').classList.remove('active');
         document.getElementById('months-screen').classList.add('active');
         renderMonths();
+        updateBackgroundImage();
     }
 
     function changeMonth(delta) {
@@ -1563,11 +1579,13 @@
         }
         document.getElementById('selected-month-display').textContent = `${months[selectedMonth]} ${selectedYear}`;
         updateDaysScreen();
+        updateBackgroundImage();
     }
 
     function updateDaysScreen() {
         document.getElementById('current-month-title').textContent = months[selectedMonth];
         renderCalendar();
+        updateBackgroundImage();
     }
 
     function renderCalendar() {
@@ -1657,7 +1675,6 @@
         });
     }
 
-    // NUEVA FUNCIÓN: Eliminar evento
     function deleteCurrentEvent() {
         if (confirm('¿Estás seguro de eliminar este evento?')) {
             if (window.currentNoteId) {
@@ -1697,7 +1714,6 @@
         document.getElementById('note-modal').style.display = "none";
         renderCalendar();
         
-        // Solo mostrar publicidad si no es premium
         if (!isPremium()) {
             pendingAction = null;
             showAd();
@@ -1745,7 +1761,6 @@
         }
     }
 
-    // NUEVO: Verificador de alarmas cada minuto
     function startAlarmChecker() {
         if (alarmInterval) clearInterval(alarmInterval);
         
@@ -1761,7 +1776,6 @@
                         const alarmData = JSON.parse(localStorage.getItem(key));
                         if (alarmData && alarmData.enabled) {
                             if (alarmData.hour === currentHour && alarmData.minute === currentMinute) {
-                                // Extraer fecha del key
                                 const parts = key.split('_');
                                 if (parts.length === 4) {
                                     const day = parts[1];
@@ -1779,58 +1793,34 @@
                     }
                 }
             }
-        }, 60000); // Verificar cada minuto
+        }, 60000);
     }
 
     // ===== FUNCIONES DE IMÁGENES =====
-    function selectImageForDay(day) {
-        // Usar la imagen del mes actual para el preview del día
-        const monthKey = `month_${selectedMonth}_${selectedYear}`;
-        let finalImg;
-        
-        if (monthImages[monthKey]) {
-            finalImg = monthImages[monthKey];
-        } else if (userImages.length > 0 && Math.random() > 0.3) {
-            finalImg = userImages[Math.floor(Math.random() * userImages.length)];
-        } else {
-            const r = Math.floor(Math.random() * totalDefaultImages) + 1;
-            finalImg = `${r}.png`;
-        }
-        
-        currentPreviewImage = finalImg;
-        document.getElementById('dynamic-background').style.backgroundImage = `url('${finalImg}')`;
-        document.getElementById('day-preview').src = finalImg;
-    }
-
-    function randomizeImage() {
-        selectImageForDay(new Date().getDate());
-    }
-
-    // MODIFICADO: handleFiles - Ahora solo muestra UN mensaje al final
     function handleFiles(files) {
         let filesProcessed = 0;
         const totalFiles = files.length;
+        const newImages = [];
         
         for (let file of files) {
             const reader = new FileReader();
             reader.onload = (e) => {
-                userImages.push(e.target.result);
+                newImages.push(e.target.result);
                 filesProcessed++;
                 
-                // Cuando se hayan procesado todos los archivos
                 if (filesProcessed === totalFiles) {
+                    userImages = [...userImages, ...newImages];
                     localStorage.setItem('user_album', JSON.stringify(userImages));
                     
-                    // Mostrar un SOLO mensaje con el total
                     alert(`📸 ¡${totalFiles} foto(s) añadida(s) correctamente! (Total: ${userImages.length})`);
                     
-                    // Actualizar las imágenes de los meses para usar las nuevas fotos
                     rotateAllMonthImages();
                     
-                    // Actualizar vistas
-                    randomizeImage();
                     if (document.getElementById('months-screen').classList.contains('active')) {
                         renderMonths();
+                    }
+                    if (document.getElementById('days-screen').classList.contains('active')) {
+                        updateBackgroundImage();
                     }
                     if (document.getElementById('adminPanel').classList.contains('active')) {
                         renderAdminPanel();
@@ -1890,12 +1880,13 @@
             localStorage.setItem('user_album', JSON.stringify(userImages));
             renderAdminPanel();
             
-            // Actualizar imágenes de los meses
             rotateAllMonthImages();
             
-            randomizeImage();
             if (document.getElementById('months-screen').classList.contains('active')) {
                 renderMonths();
+            }
+            if (document.getElementById('days-screen').classList.contains('active')) {
+                updateBackgroundImage();
             }
             alert('✅ Foto eliminada correctamente');
         }
@@ -1912,12 +1903,13 @@
             localStorage.setItem('user_album', JSON.stringify(userImages));
             renderAdminPanel();
             
-            // Actualizar imágenes de los meses (ahora usarán solo imágenes por defecto)
             rotateAllMonthImages();
             
-            randomizeImage();
             if (document.getElementById('months-screen').classList.contains('active')) {
                 renderMonths();
+            }
+            if (document.getElementById('days-screen').classList.contains('active')) {
+                updateBackgroundImage();
             }
             alert('✅ Todas las fotos han sido eliminadas');
         }
@@ -1928,14 +1920,18 @@
         updateGreeting();
         renderMonths();
         updateDaysScreen();
-        randomizeImage();
+        updateBackgroundImage();
         updateDownloadButtonVisibility();
         checkNotificationPermission();
         updatePremiumButton();
-        startAlarmChecker(); // Iniciar verificador de alarmas
-        startImageRotation(); // Iniciar rotación automática de imágenes
+        startAlarmChecker();
+        startImageRotation();
         
         console.log('🔍 App iniciada correctamente');
+        
+        setTimeout(() => {
+            updateBackgroundImage();
+        }, 500);
     };
 
     // ===== EVENT LISTENERS =====
@@ -1997,6 +1993,7 @@
 
 </body>
 </html>
+
 
 
 
