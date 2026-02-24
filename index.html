@@ -65,6 +65,21 @@
             z-index: -1;
         }
 
+        /* Indicador de origen de imagen */
+        .image-source-indicator {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background: rgba(0,0,0,0.7);
+            color: var(--gold);
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            border: 1px solid var(--gold);
+            z-index: 1000;
+            backdrop-filter: blur(5px);
+        }
+
         /* Pantallas */
         .screen {
             display: none;
@@ -1020,6 +1035,9 @@
 <!-- Fondo Dinámico -->
 <div id="dynamic-background" class="dynamic-background"></div>
 
+<!-- Indicador de origen de imagen (solo visible en consola, pero lo podemos mostrar si quieres) -->
+<div id="imageSourceIndicator" class="image-source-indicator" style="display: none;"></div>
+
 <!-- Pantalla de Meses -->
 <div id="months-screen" class="screen active">
     <div class="glass-header">
@@ -1442,18 +1460,35 @@
         }
     }
 
-    // ===== FUNCIONES DE GESTIÓN DE IMÁGENES =====
+    // ===== FUNCIONES DE GESTIÓN DE IMÁGENES - CORREGIDAS CON PRIORIDAD ABSOLUTA =====
     
+    // FUNCIÓN PRINCIPAL: Obtener imagen aleatoria con PRIORIDAD ABSOLUTA para fotos del usuario
     function getRandomImage() {
+        // SIEMPRE优先 usar fotos del usuario si existen
         if (userImages.length > 0) {
-            if (Math.random() > 0.3) {
-                return userImages[Math.floor(Math.random() * userImages.length)];
-            }
+            const randomIndex = Math.floor(Math.random() * userImages.length);
+            console.log('📸 Usando foto de usuario #' + randomIndex);
+            return userImages[randomIndex];
         }
+        
+        // SOLO si NO hay fotos del usuario, usar imágenes de la raíz
         const r = Math.floor(Math.random() * totalDefaultImages) + 1;
+        console.log('🖼️ Usando imagen de raíz: ' + r + '.png');
         return `${r}.png`;
     }
     
+    // Función para verificar cuántas fotos hay guardadas
+    function verificarFotosGuardadas() {
+        console.log('📸 Fotos en localStorage:', userImages.length);
+        if (userImages.length > 0) {
+            console.log('✅ Primera foto:', userImages[0].substring(0, 50) + '...');
+        } else {
+            console.log('⚠️ No hay fotos de usuario - usando imágenes de raíz');
+        }
+        return userImages.length;
+    }
+    
+    // Obtener imagen para un mes específico
     function getImageForMonth(monthIndex) {
         const monthKey = `month_${monthIndex}_${currentYear}`;
         
@@ -1467,8 +1502,10 @@
         return newImage;
     }
     
+    // Rotar todas las imágenes de los meses
     function rotateAllMonthImages() {
         console.log('🔄 Rotando imágenes de los meses...');
+        console.log('📸 Usando', userImages.length, 'fotos de usuario disponibles');
         
         months.forEach((_, index) => {
             const monthKey = `month_${index}_${currentYear}`;
@@ -1484,6 +1521,8 @@
         if (document.getElementById('days-screen').classList.contains('active')) {
             updateBackgroundImage();
         }
+        
+        console.log('✅ Rotación completada');
     }
     
     function startImageRotation() {
@@ -1521,6 +1560,85 @@
             if (previewElement) {
                 previewElement.src = monthImage;
             }
+        }
+    }
+
+    // ===== FUNCIÓN DE SUBIDA DE FOTOS CORREGIDA =====
+    function handleFiles(files) {
+        let filesProcessed = 0;
+        const totalFiles = files.length;
+        const newImages = [];
+        
+        console.log('📤 Subiendo', totalFiles, 'foto(s)...');
+        
+        for (let file of files) {
+            const reader = new FileReader();
+            
+            reader.onload = (e) => {
+                // Guardar la imagen como data URL
+                const imageData = e.target.result;
+                newImages.push(imageData);
+                filesProcessed++;
+                
+                console.log(`✅ Procesada ${filesProcessed} de ${totalFiles}`);
+                
+                // Cuando se hayan procesado TODOS los archivos
+                if (filesProcessed === totalFiles) {
+                    // Añadir las nuevas imágenes al array existente
+                    userImages = [...userImages, ...newImages];
+                    
+                    // Guardar en localStorage
+                    localStorage.setItem('user_album', JSON.stringify(userImages));
+                    
+                    console.log('💾 Guardadas en localStorage:', userImages.length, 'fotos totales');
+                    
+                    // MOSTRAR MENSAJE DE CONFIRMACIÓN
+                    alert(`📸 ¡${totalFiles} foto(s) añadida(s) correctamente!\nTotal: ${userImages.length} fotos en tu álbum`);
+                    
+                    // AHORA SÍ, actualizar las imágenes de los meses con las NUEVAS fotos
+                    rotateAllMonthImages();
+                    
+                    // Actualizar todas las vistas
+                    if (document.getElementById('months-screen').classList.contains('active')) {
+                        renderMonths();
+                    }
+                    if (document.getElementById('days-screen').classList.contains('active')) {
+                        updateBackgroundImage();
+                    }
+                    if (document.getElementById('adminPanel').classList.contains('active')) {
+                        renderAdminPanel();
+                    }
+                    
+                    // Verificar que se guardaron
+                    verificarFotosGuardadas();
+                }
+            };
+            
+            reader.onerror = (error) => {
+                console.error('❌ Error al leer archivo:', error);
+                alert('Error al subir la foto. Intenta de nuevo.');
+            };
+            
+            reader.readAsDataURL(file);
+        }
+    }
+
+    // ===== FUNCIÓN PARA DEBUG =====
+    function debugLocalStorage() {
+        console.log('=== DEBUG LOCALSTORAGE ===');
+        console.log('user_album:', JSON.parse(localStorage.getItem('user_album') || '[]').length, 'fotos');
+        console.log('month_images:', Object.keys(JSON.parse(localStorage.getItem('month_images') || '{}')).length, 'meses con imagen');
+        console.log('=========================');
+    }
+
+    // ===== FUNCIÓN PARA FORZAR USO DE FOTOS DEL USUARIO =====
+    function forzarUsoFotosUsuario() {
+        if (userImages.length > 0) {
+            console.log('🎯 Forzando uso de fotos del usuario...');
+            rotateAllMonthImages();
+            alert(`✅ Ahora usando ${userImages.length} fotos del usuario`);
+        } else {
+            alert('⚠️ No hay fotos de usuario. Sube algunas primero.');
         }
     }
 
@@ -1796,41 +1914,6 @@
         }, 60000);
     }
 
-    // ===== FUNCIONES DE IMÁGENES =====
-    function handleFiles(files) {
-        let filesProcessed = 0;
-        const totalFiles = files.length;
-        const newImages = [];
-        
-        for (let file of files) {
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                newImages.push(e.target.result);
-                filesProcessed++;
-                
-                if (filesProcessed === totalFiles) {
-                    userImages = [...userImages, ...newImages];
-                    localStorage.setItem('user_album', JSON.stringify(userImages));
-                    
-                    alert(`📸 ¡${totalFiles} foto(s) añadida(s) correctamente! (Total: ${userImages.length})`);
-                    
-                    rotateAllMonthImages();
-                    
-                    if (document.getElementById('months-screen').classList.contains('active')) {
-                        renderMonths();
-                    }
-                    if (document.getElementById('days-screen').classList.contains('active')) {
-                        updateBackgroundImage();
-                    }
-                    if (document.getElementById('adminPanel').classList.contains('active')) {
-                        renderAdminPanel();
-                    }
-                }
-            };
-            reader.readAsDataURL(file);
-        }
-    }
-
     // ===== FUNCIONES ADMIN =====
     function toggleAdminPanel() {
         const panel = document.getElementById('adminPanel');
@@ -1918,6 +2001,11 @@
     // ===== INICIALIZACIÓN =====
     window.onload = () => {
         updateGreeting();
+        
+        // Verificar fotos al iniciar
+        verificarFotosGuardadas();
+        debugLocalStorage();
+        
         renderMonths();
         updateDaysScreen();
         updateBackgroundImage();
@@ -1931,8 +2019,15 @@
         
         setTimeout(() => {
             updateBackgroundImage();
+            verificarFotosGuardadas();
         }, 500);
     };
+
+    // Hacer funciones disponibles globalmente para debugging
+    window.verificarFotosGuardadas = verificarFotosGuardadas;
+    window.debugLocalStorage = debugLocalStorage;
+    window.forzarUsoFotosUsuario = forzarUsoFotosUsuario;
+    window.userImages = userImages; // Para acceso directo desde consola
 
     // ===== EVENT LISTENERS =====
     document.addEventListener('keydown', (e) => {
@@ -1993,8 +2088,6 @@
 
 </body>
 </html>
-
-
 
 
 
