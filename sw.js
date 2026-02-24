@@ -1,4 +1,4 @@
-const CACHE_NAME = 'CALENDARIO TOTAL K-POP-v2.5';
+const CACHE_NAME = 'CALENDARIO TOTAL K-POP-v3.0';
 const urlsToCache = [
   '/',
   '/manifest.json',
