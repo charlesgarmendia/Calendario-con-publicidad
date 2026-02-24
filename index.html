@@ -110,7 +110,7 @@
             text-shadow: 0 0 10px rgba(255,215,0,0.8);
         }
 
-        /* Botón de descarga */
+        /* Botón de descarga - AHORA SIEMPRE VISIBLE */
         .download-btn {
             background: linear-gradient(145deg, #ffd700, #ffa500);
             border: none;
@@ -138,6 +138,38 @@
             0% { transform: scale(1); }
             50% { transform: scale(1.05); }
             100% { transform: scale(1); }
+        }
+
+        /* Botón Sin Publicidad - NUEVO */
+        .premium-btn {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background: linear-gradient(145deg, #2a2a40, #1a1a2e);
+            border: 2px solid var(--gold);
+            color: var(--gold);
+            padding: 8px 15px;
+            border-radius: 30px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 5px 10px rgba(0,0,0,0.5);
+            z-index: 90;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .premium-btn.active {
+            background: linear-gradient(145deg, #ffd700, #ffa500);
+            color: #1a1a2e;
+            border-color: white;
+            box-shadow: 0 0 20px gold;
+        }
+
+        .premium-btn:active {
+            transform: scale(0.95);
         }
 
         /* Botones generales */
@@ -751,6 +783,109 @@
             50% { transform: translateY(-15px); }
         }
 
+        /* Modal Premium - NUEVO */
+        .premium-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.95);
+            backdrop-filter: blur(10px);
+            z-index: 3000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .premium-modal.active {
+            display: flex;
+        }
+
+        .premium-modal-content {
+            background: var(--glass-darker);
+            border: 3px solid var(--gold);
+            padding: 30px;
+            border-radius: 30px;
+            width: 100%;
+            max-width: 350px;
+            text-align: center;
+            box-shadow: 0 0 50px var(--gold);
+        }
+
+        .premium-modal-title {
+            color: var(--gold);
+            font-size: 2rem;
+            margin-bottom: 10px;
+            text-shadow: 0 0 10px gold;
+        }
+
+        .premium-modal-subtitle {
+            color: white;
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+            opacity: 0.8;
+        }
+
+        .premium-modal-input {
+            width: 100%;
+            padding: 15px;
+            background: rgba(0,0,0,0.5);
+            border: 2px solid var(--gold);
+            border-radius: 20px;
+            color: white;
+            font-size: 1.2rem;
+            text-align: center;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+        }
+
+        .premium-modal-input:focus {
+            outline: none;
+            border-color: var(--blue);
+            box-shadow: 0 0 20px var(--blue);
+        }
+
+        .premium-modal-btn {
+            background: linear-gradient(145deg, #ffd700, #ffa500);
+            border: none;
+            color: #1a1a2e;
+            padding: 15px 30px;
+            border-radius: 50px;
+            font-weight: bold;
+            font-size: 1.2rem;
+            cursor: pointer;
+            width: 100%;
+            margin-bottom: 10px;
+            box-shadow: 0 5px 0 #b8860b;
+        }
+
+        .premium-modal-btn:active {
+            transform: translateY(3px);
+            box-shadow: 0 2px 0 #b8860b;
+        }
+
+        .premium-modal-btn.secondary {
+            background: linear-gradient(145deg, #e74c3c, #c0392b);
+            color: white;
+            box-shadow: 0 5px 0 #962d22;
+        }
+
+        .premium-key-list {
+            color: white;
+            font-size: 0.8rem;
+            margin-top: 15px;
+            padding: 10px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 10px;
+        }
+
+        .premium-key-list span {
+            color: var(--gold);
+            font-weight: bold;
+        }
+
         /* Upload area */
         .upload-area {
             display: flex;
@@ -771,24 +906,6 @@
             font-weight: bold;
             cursor: pointer;
             box-shadow: 0 5px 0 #6c3483;
-        }
-
-        /* Botón de notificaciones */
-        .notify-btn {
-            background: linear-gradient(145deg, var(--pink), #ff4d6d);
-            border: 2px solid white;
-            color: white;
-            padding: 8px 15px;
-            border-radius: 30px;
-            font-size: 0.9rem;
-            cursor: pointer;
-            margin-left: 10px;
-            box-shadow: 0 5px 0 #c92a4e;
-        }
-
-        .notify-btn:active {
-            transform: translateY(3px);
-            box-shadow: 0 2px 0 #c92a4e;
         }
 
         /* Banner de notificaciones */
@@ -820,7 +937,7 @@
             cursor: pointer;
         }
 
-        /* Modal para pedir nombre */
+        /* Modal para pedir nombre - MODIFICADO */
         .name-modal {
             display: none;
             position: fixed;
@@ -904,12 +1021,11 @@
 <div id="months-screen" class="screen active">
     <div class="glass-header">
         <div class="greeting">
-            <span id="greeting-text">Cargando...</span>, <span id="user-name-display">Cargando...</span> ✨
-            <button class="notify-btn" onclick="testNotification()">🔔 Probar Notificación</button>
+            <span id="greeting-text">Bienvenido</span>, <span id="user-name-display">Usuario</span> ✨
         </div>
     </div>
 
-    <!-- Botón de descarga -->
+    <!-- Botón de descarga - SIEMPRE VISIBLE AL INICIO -->
     <button id="downloadAppBtn" class="download-btn" onclick="installPWA()">📲 DESCARGAR APP</button>
 
     <!-- Banner de notificaciones -->
@@ -961,7 +1077,7 @@
     </div>
 </div>
 
-<!-- Modal de Notas con emojis y alarmas -->
+<!-- Modal de Notas con emojis, alarmas y botón eliminar -->
 <div id="note-modal" class="modal">
     <div class="modal-content">
         <div class="modal-title" id="modal-title">1 Enero 2026</div>
@@ -1009,15 +1125,18 @@
             </div>
             <div style="margin-top: 10px;">
                 <label style="color: white; display: flex; align-items: center; gap: 5px;">
-                    <input type="checkbox" id="alarmEnabled"> Activar recordatorio diario
+                    <input type="checkbox" id="alarmEnabled"> Activar recordatorio
                 </label>
             </div>
         </div>
         
-        <div style="display: flex; gap: 10px;">
+        <div style="display: flex; gap: 10px; margin-bottom: 10px;">
             <button class="btn" style="flex:1;" onclick="saveNoteAndShowAd()">💾 Guardar</button>
             <button class="btn btn-primary" style="flex:1;" onclick="closeModal()">Cerrar</button>
         </div>
+        
+        <!-- NUEVO BOTÓN ELIMINAR EVENTO -->
+        <button class="btn btn-danger" style="width: 100%;" onclick="deleteCurrentEvent()">🗑️ ELIMINAR EVENTO</button>
     </div>
 </div>
 
@@ -1034,14 +1153,31 @@
     <div id="adTimer" class="ad-timer">⏱️ 3 seg</div>
 </div>
 
-<!-- Modal para pedir nombre -->
+<!-- Modal para pedir nombre - AHORA SOLO DESPUÉS DE INSTALAR -->
 <div id="nameModal" class="name-modal">
     <div class="name-modal-content">
-        <div class="name-modal-title" id="nameModalTitle">👋 ¡Hola!</div>
+        <div class="name-modal-title" id="nameModalTitle">👋 ¡Bienvenido a la App!</div>
         <input type="text" id="nameInput" class="name-modal-input" placeholder="Escribe tu nombre" autocomplete="off">
-        <button class="name-modal-btn" onclick="saveUserName()">Guardar</button>
+        <button class="name-modal-btn" onclick="saveUserName()">Comenzar</button>
     </div>
 </div>
+
+<!-- MODAL PREMIUM - NUEVO -->
+<div id="premiumModal" class="premium-modal">
+    <div class="premium-modal-content">
+        <div class="premium-modal-title">⭐ SIN PUBLICIDAD</div>
+        <div class="premium-modal-subtitle">Ingresa tu key premium</div>
+        <input type="text" id="premiumKey" class="premium-modal-input" placeholder="XXXX-XXXX" autocomplete="off">
+        <button class="premium-modal-btn" onclick="activatePremium()">Activar</button>
+        <button class="premium-modal-btn secondary" onclick="closePremiumModal()">Cancelar</button>
+        <div class="premium-key-list">
+            Keys disponibles: <span>PREMIUM2025</span> • <span>VIP2026</span> • <span>FAMILY2027</span> • <span>ELITE2028</span>
+        </div>
+    </div>
+</div>
+
+<!-- Botón Sin Publicidad - NUEVO -->
+<button class="premium-btn" id="premiumBtn" onclick="openPremiumModal()">⭐ SIN PUBLICIDAD</button>
 
 <!-- Botón de Administrador -->
 <button class="admin-btn" id="adminBtn" onclick="toggleAdminPanel()">🔧</button>
@@ -1089,10 +1225,63 @@
     
     // Variables para notificaciones
     let notificationPermission = false;
+    let alarmInterval = null;
     
     // Variables para PWA
     let deferredPrompt;
     const downloadBtn = document.getElementById('downloadAppBtn');
+
+    // ===== FUNCIÓN PARA VERIFICAR PREMIUM =====
+    function isPremium() {
+        const premiumData = JSON.parse(localStorage.getItem('premium_status') || '{"active":false,"expires":0}');
+        if (premiumData.active && premiumData.expires > Date.now()) {
+            return true;
+        }
+        return false;
+    }
+
+    function updatePremiumButton() {
+        const premiumBtn = document.getElementById('premiumBtn');
+        if (isPremium()) {
+            premiumBtn.classList.add('active');
+            premiumBtn.innerHTML = '⭐ PREMIUM ACTIVO';
+        } else {
+            premiumBtn.classList.remove('active');
+            premiumBtn.innerHTML = '⭐ SIN PUBLICIDAD';
+        }
+    }
+
+    function openPremiumModal() {
+        if (isPremium()) {
+            alert('✨ Ya tienes premium activo hasta: ' + new Date(JSON.parse(localStorage.getItem('premium_status')).expires).toLocaleDateString());
+            return;
+        }
+        document.getElementById('premiumModal').classList.add('active');
+    }
+
+    function closePremiumModal() {
+        document.getElementById('premiumModal').classList.remove('active');
+        document.getElementById('premiumKey').value = '';
+    }
+
+    function activatePremium() {
+        const key = document.getElementById('premiumKey').value.trim().toUpperCase();
+        const validKeys = ['PREMIUM2025', 'VIP2026', 'FAMILY2027', 'ELITE2028'];
+        
+        if (validKeys.includes(key)) {
+            const expires = Date.now() + (365 * 24 * 60 * 60 * 1000); // 1 año
+            localStorage.setItem('premium_status', JSON.stringify({
+                active: true,
+                expires: expires,
+                key: key
+            }));
+            updatePremiumButton();
+            closePremiumModal();
+            alert('✅ ¡Felicidades! Ahora tienes premium por 1 año sin publicidad');
+        } else {
+            alert('❌ Key inválida. Intenta con alguna de las keys mostradas');
+        }
+    }
 
     // ===== FUNCIÓN PARA GUARDAR NOMBRE DE USUARIO =====
     function saveUserName() {
@@ -1116,12 +1305,15 @@
         document.getElementById('nameModal').classList.add('active');
     }
 
+    // MODIFICADO: Solo pide nombre después de instalar
     function checkFirstTimeUser() {
-        const userName = localStorage.getItem('user_name');
-        if (!userName) {
-            document.getElementById('nameInput').value = '';
-            document.getElementById('nameModalTitle').textContent = '👋 ¡Bienvenida!';
-            document.getElementById('nameModal').classList.add('active');
+        if (isAppInstalled()) {
+            const userName = localStorage.getItem('user_name');
+            if (!userName) {
+                document.getElementById('nameInput').value = '';
+                document.getElementById('nameModalTitle').textContent = '👋 ¡Bienvenido a la App!';
+                document.getElementById('nameModal').classList.add('active');
+            }
         }
     }
 
@@ -1159,6 +1351,7 @@
         console.log('✅ PWA instalada correctamente');
         deferredPrompt = null;
         updateDownloadButtonVisibility();
+        checkFirstTimeUser(); // Ahora pide nombre después de instalar
     });
 
     function installPWA() {
@@ -1181,6 +1374,22 @@
 
     // ===== FUNCIONES DE PUBLICIDAD =====
     function showAd() {
+        // Si es premium, no mostrar publicidad
+        if (isPremium()) {
+            if (pendingAction) {
+                if (pendingAction.type === 'selectMonth') {
+                    selectedMonth = pendingAction.monthIndex;
+                    selectedYear = currentYear;
+                    document.getElementById('selected-month-display').textContent = `${months[pendingAction.monthIndex]} ${selectedYear}`;
+                    updateDaysScreen();
+                    document.getElementById('months-screen').classList.remove('active');
+                    document.getElementById('days-screen').classList.add('active');
+                }
+                pendingAction = null;
+            }
+            return;
+        }
+
         const adModal = document.getElementById('adModal');
         const timerDisplay = document.getElementById('timerDisplay');
         const timerDiv = document.getElementById('adTimer');
@@ -1365,6 +1574,7 @@
         window.currentNoteId = noteId;
         window.currentEmojiId = emojiId;
         window.currentAlarmId = alarmId;
+        window.currentDay = day;
     }
 
     function selectEmoji(emoji) {
@@ -1379,6 +1589,25 @@
                 btn.classList.add('selected');
             }
         });
+    }
+
+    // NUEVA FUNCIÓN: Eliminar evento
+    function deleteCurrentEvent() {
+        if (confirm('¿Estás seguro de eliminar este evento?')) {
+            if (window.currentNoteId) {
+                localStorage.removeItem(window.currentNoteId);
+            }
+            if (window.currentEmojiId) {
+                localStorage.removeItem(window.currentEmojiId);
+            }
+            if (window.currentAlarmId) {
+                localStorage.removeItem(window.currentAlarmId);
+            }
+            
+            document.getElementById('note-modal').style.display = "none";
+            renderCalendar();
+            alert('✅ Evento eliminado correctamente');
+        }
     }
 
     function saveNoteAndShowAd() {
@@ -1397,17 +1626,16 @@
                 minute: parseInt(document.getElementById('alarmMinute').value)
             };
             localStorage.setItem(window.currentAlarmId, JSON.stringify(alarmData));
-            
-            if (alarmData.enabled) {
-                scheduleReminder(window.currentNoteId, alarmData);
-            }
         }
         
         document.getElementById('note-modal').style.display = "none";
         renderCalendar();
         
-        pendingAction = null;
-        showAd();
+        // Solo mostrar publicidad si no es premium
+        if (!isPremium()) {
+            pendingAction = null;
+            showAd();
+        }
     }
 
     function closeModal() {
@@ -1451,43 +1679,41 @@
         }
     }
 
-    function testNotification() {
-        const userName = localStorage.getItem('user_name') || 'Usuario';
-        showLocalNotification(`🔔 ¡Hola ${userName}!`, 'Esta es una notificación de prueba');
-    }
-
-    function scheduleReminder(noteId, alarmData) {
-        if (!notificationPermission) return;
+    // NUEVO: Verificador de alarmas cada minuto
+    function startAlarmChecker() {
+        if (alarmInterval) clearInterval(alarmInterval);
         
-        const now = new Date();
-        const reminderTime = new Date();
-        reminderTime.setHours(alarmData.hour, alarmData.minute, 0);
-        
-        if (reminderTime <= now) {
-            reminderTime.setDate(reminderTime.getDate() + 1);
-        }
-        
-        const timeUntilReminder = reminderTime.getTime() - now.getTime();
-        
-        setTimeout(() => {
-            showLocalNotification('⏰ Recordatorio', 'Tienes una nota pendiente en tu calendario');
-        }, timeUntilReminder);
-    }
-
-    function setupReminders() {
-        for (let i = 0; i < localStorage.length; i++) {
-            const key = localStorage.key(i);
-            if (key && key.startsWith('alarm_')) {
-                try {
-                    const alarmData = JSON.parse(localStorage.getItem(key));
-                    if (alarmData && alarmData.enabled) {
-                        scheduleReminder(key, alarmData);
+        alarmInterval = setInterval(() => {
+            const now = new Date();
+            const currentHour = now.getHours();
+            const currentMinute = now.getMinutes();
+            
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                if (key && key.startsWith('alarm_')) {
+                    try {
+                        const alarmData = JSON.parse(localStorage.getItem(key));
+                        if (alarmData && alarmData.enabled) {
+                            if (alarmData.hour === currentHour && alarmData.minute === currentMinute) {
+                                // Extraer fecha del key
+                                const parts = key.split('_');
+                                if (parts.length === 4) {
+                                    const day = parts[1];
+                                    const month = parseInt(parts[2]);
+                                    const year = parseInt(parts[3]);
+                                    const noteKey = `nota_${day}_${month}_${year}`;
+                                    const note = localStorage.getItem(noteKey) || 'Sin nota';
+                                    
+                                    showLocalNotification('⏰ ¡Recordatorio!', `${day} ${months[month]}: ${note.substring(0, 50)}`);
+                                }
+                            }
+                        }
+                    } catch (e) {
+                        console.log('Error en verificador de alarmas:', e);
                     }
-                } catch (e) {
-                    console.log('Error cargando alarma:', e);
                 }
             }
-        }
+        }, 60000); // Verificar cada minuto
     }
 
     // ===== FUNCIONES DE IMÁGENES =====
@@ -1573,7 +1799,7 @@
     }
 
     function deleteImage(index) {
-        if (confirm('¿Estás segura de eliminar esta foto?')) {
+        if (confirm('¿Estás seguro de eliminar esta foto?')) {
             userImages.splice(index, 1);
             localStorage.setItem('user_album', JSON.stringify(userImages));
             renderAdminPanel();
@@ -1591,7 +1817,7 @@
             return;
         }
         
-        if (confirm('⚠️ ¿Estás SEGURA de eliminar TODAS las fotos?\n¡Esta acción no se puede deshacer!')) {
+        if (confirm('⚠️ ¿Estás SEGURO de eliminar TODAS las fotos?\n¡Esta acción no se puede deshacer!')) {
             userImages = [];
             localStorage.setItem('user_album', JSON.stringify(userImages));
             renderAdminPanel();
@@ -1605,15 +1831,16 @@
 
     // ===== INICIALIZACIÓN =====
     window.onload = () => {
-        checkFirstTimeUser();
         updateGreeting();
         renderMonths();
         updateDaysScreen();
         randomizeImage();
         updateDownloadButtonVisibility();
         checkNotificationPermission();
-        setupReminders();
+        updatePremiumButton();
+        startAlarmChecker(); // Iniciar verificador de alarmas
         
+        // Ya no pedimos nombre aquí, solo después de instalar
         console.log('🔍 App iniciada correctamente');
     };
 
@@ -1628,6 +1855,9 @@
             }
             if (document.getElementById('adminPanel').classList.contains('active')) {
                 toggleAdminPanel();
+            }
+            if (document.getElementById('premiumModal').classList.contains('active')) {
+                closePremiumModal();
             }
         }
     });
@@ -1649,6 +1879,12 @@
             closeAd();
         }
     });
+
+    document.getElementById('premiumModal').addEventListener('click', (e) => {
+        if (e.target === document.getElementById('premiumModal')) {
+            closePremiumModal();
+        }
+    });
 </script>
 
 <script>
@@ -1667,6 +1903,7 @@
 
 </body>
 </html>
+
 
 
 
