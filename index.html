@@ -1207,7 +1207,7 @@
 
 <script>
     // Configuración
-    const totalDefaultImages = 50;
+    const totalDefaultImages = 50; // Número máximo de imágenes por defecto (1.png a 50.png)
     const months = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
     const monthsShort = ["ENE", "FEB", "MAR", "ABR", "MAY", "JUN", "JUL", "AGO", "SEP", "OCT", "NOV", "DIC"];
     
@@ -1219,6 +1219,9 @@
     let userImages = JSON.parse(localStorage.getItem('user_album')) || [];
     let currentPreviewImage = '';
     let selectedEmoji = '';
+    
+    // NUEVO: Mapa de imágenes por mes
+    let monthImages = JSON.parse(localStorage.getItem('month_images')) || {};
     
     // Variables para publicidad
     let pendingAction = null;
@@ -1233,6 +1236,9 @@
     // Variables para PWA
     let deferredPrompt;
     const downloadBtn = document.getElementById('downloadAppBtn');
+    
+    // NUEVO: Intervalo para rotación de imágenes
+    let rotationInterval = null;
 
     // ===== FUNCIÓN PARA VERIFICAR PREMIUM =====
     function isPremium() {
@@ -1441,6 +1447,69 @@
         }
     }
 
+    // ===== NUEVAS FUNCIONES PARA GESTIÓN DE IMÁGENES POR MES =====
+    
+    // Obtener una imagen aleatoria (de usuario o por defecto)
+    function getRandomImage() {
+        if (userImages.length > 0 && Math.random() > 0.3) {
+            // 70% de probabilidad de usar imagen de usuario si hay disponibles
+            return userImages[Math.floor(Math.random() * userImages.length)];
+        } else {
+            // Usar imagen por defecto de la raíz
+            const r = Math.floor(Math.random() * totalDefaultImages) + 1;
+            return `${r}.png`;
+        }
+    }
+    
+    // Obtener imagen para un mes específico
+    function getImageForMonth(monthIndex) {
+        const monthKey = `month_${monthIndex}_${currentYear}`;
+        
+        // Si ya tenemos una imagen asignada para este mes, usarla
+        if (monthImages[monthKey]) {
+            return monthImages[monthKey];
+        }
+        
+        // Si no, asignar una nueva imagen aleatoria
+        const newImage = getRandomImage();
+        monthImages[monthKey] = newImage;
+        localStorage.setItem('month_images', JSON.stringify(monthImages));
+        return newImage;
+    }
+    
+    // Rotar todas las imágenes de los meses
+    function rotateAllMonthImages() {
+        console.log('🔄 Rotando imágenes de los meses...');
+        
+        // Generar nuevas imágenes para todos los meses
+        months.forEach((_, index) => {
+            const monthKey = `month_${index}_${currentYear}`;
+            monthImages[monthKey] = getRandomImage();
+        });
+        
+        // Guardar en localStorage
+        localStorage.setItem('month_images', JSON.stringify(monthImages));
+        
+        // Actualizar la pantalla si estamos en meses
+        if (document.getElementById('months-screen').classList.contains('active')) {
+            renderMonths();
+        }
+    }
+    
+    // Iniciar rotación automática cada 10 minutos
+    function startImageRotation() {
+        if (rotationInterval) {
+            clearInterval(rotationInterval);
+        }
+        
+        // Rotar cada 10 minutos (600000 ms)
+        rotationInterval = setInterval(() => {
+            rotateAllMonthImages();
+        }, 600000); // 10 minutos
+        
+        console.log('⏰ Rotación de imágenes iniciada (cada 10 minutos)');
+    }
+
     // ===== FUNCIONES DEL CALENDARIO =====
     function renderMonths() {
         const grid = document.getElementById('months-grid');
@@ -1450,14 +1519,8 @@
             const card = document.createElement('div');
             card.className = 'month-card';
             
-            let monthImage;
-            if (userImages.length > 0 && Math.random() > 0.3) {
-                monthImage = userImages[Math.floor(Math.random() * userImages.length)];
-            } else {
-                const r = Math.floor(Math.random() * totalDefaultImages) + 1;
-                monthImage = `${r}.png`;
-            }
-            
+            // Obtener imagen específica para este mes
+            const monthImage = getImageForMonth(index);
             card.style.backgroundImage = `url('${monthImage}')`;
             card.onclick = () => selectMonth(index);
             
@@ -1721,9 +1784,13 @@
 
     // ===== FUNCIONES DE IMÁGENES =====
     function selectImageForDay(day) {
+        // Usar la imagen del mes actual para el preview del día
+        const monthKey = `month_${selectedMonth}_${selectedYear}`;
         let finalImg;
         
-        if (userImages.length > 0 && Math.random() > 0.3) {
+        if (monthImages[monthKey]) {
+            finalImg = monthImages[monthKey];
+        } else if (userImages.length > 0 && Math.random() > 0.3) {
             finalImg = userImages[Math.floor(Math.random() * userImages.length)];
         } else {
             const r = Math.floor(Math.random() * totalDefaultImages) + 1;
@@ -1739,19 +1806,35 @@
         selectImageForDay(new Date().getDate());
     }
 
+    // MODIFICADO: handleFiles - Ahora solo muestra UN mensaje al final
     function handleFiles(files) {
+        let filesProcessed = 0;
+        const totalFiles = files.length;
+        
         for (let file of files) {
             const reader = new FileReader();
             reader.onload = (e) => {
                 userImages.push(e.target.result);
-                localStorage.setItem('user_album', JSON.stringify(userImages));
-                alert(`📸 ¡Foto añadida! (Total: ${userImages.length})`);
-                randomizeImage();
-                if (document.getElementById('months-screen').classList.contains('active')) {
-                    renderMonths();
-                }
-                if (document.getElementById('adminPanel').classList.contains('active')) {
-                    renderAdminPanel();
+                filesProcessed++;
+                
+                // Cuando se hayan procesado todos los archivos
+                if (filesProcessed === totalFiles) {
+                    localStorage.setItem('user_album', JSON.stringify(userImages));
+                    
+                    // Mostrar un SOLO mensaje con el total
+                    alert(`📸 ¡${totalFiles} foto(s) añadida(s) correctamente! (Total: ${userImages.length})`);
+                    
+                    // Actualizar las imágenes de los meses para usar las nuevas fotos
+                    rotateAllMonthImages();
+                    
+                    // Actualizar vistas
+                    randomizeImage();
+                    if (document.getElementById('months-screen').classList.contains('active')) {
+                        renderMonths();
+                    }
+                    if (document.getElementById('adminPanel').classList.contains('active')) {
+                        renderAdminPanel();
+                    }
                 }
             };
             reader.readAsDataURL(file);
@@ -1806,6 +1889,10 @@
             userImages.splice(index, 1);
             localStorage.setItem('user_album', JSON.stringify(userImages));
             renderAdminPanel();
+            
+            // Actualizar imágenes de los meses
+            rotateAllMonthImages();
+            
             randomizeImage();
             if (document.getElementById('months-screen').classList.contains('active')) {
                 renderMonths();
@@ -1824,6 +1911,10 @@
             userImages = [];
             localStorage.setItem('user_album', JSON.stringify(userImages));
             renderAdminPanel();
+            
+            // Actualizar imágenes de los meses (ahora usarán solo imágenes por defecto)
+            rotateAllMonthImages();
+            
             randomizeImage();
             if (document.getElementById('months-screen').classList.contains('active')) {
                 renderMonths();
@@ -1842,8 +1933,8 @@
         checkNotificationPermission();
         updatePremiumButton();
         startAlarmChecker(); // Iniciar verificador de alarmas
+        startImageRotation(); // Iniciar rotación automática de imágenes
         
-        // Ya no pedimos nombre aquí, solo después de instalar
         console.log('🔍 App iniciada correctamente');
     };
 
@@ -1906,7 +1997,6 @@
 
 </body>
 </html>
-
 
 
 
