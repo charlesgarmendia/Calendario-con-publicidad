@@ -1,0 +1,15 @@
+1. Información General
+​La aplicación PWA Elite - Calendario Personal (en adelante, "la App") se compromete a proteger la privacidad de sus usuarios. Esta política describe cómo se manejan los datos dentro del entorno de la aplicación.
+​2. Recopilación y Almacenamiento de Datos
+​Datos Locales: La App funciona principalmente mediante almacenamiento local (LocalStorage). Las notas, recordatorios, nombres de usuario y fotos subidas se guardan exclusivamente en el dispositivo del usuario.
+​Fotos: Las imágenes que usted sube no se envían a servidores externos; permanecen en el almacenamiento de su navegador o dispositivo.
+​Sin Registro: No solicitamos correos electrónicos, números de teléfono ni contraseñas para el uso básico de la aplicación.
+​3. Publicidad y Terceros
+​Monetag: La App utiliza servicios de publicidad de terceros (Monetag) para su mantenimiento. Estos proveedores pueden recopilar datos técnicos anónimos (como dirección IP o identificadores de publicidad) para mostrar anuncios relevantes.
+​Cookies y Caché: La App utiliza Service Workers y almacenamiento en caché para permitir el funcionamiento fuera de línea y mejorar la velocidad de carga.
+​4. Permisos del Dispositivo
+​Para el funcionamiento óptimo, la App solicita:
+​Notificaciones: Para enviar alertas de recordatorios configurados por el usuario.
+​Almacenamiento/Galería: Para permitir la subida de fotos personales al calendario.
+​5. Control del Usuario
+​Usted tiene control total sobre sus datos. Puede eliminar toda la información almacenada simplemente limpiando los datos de navegación o utilizando la función "Eliminar todas las fotos" en el panel de administración de la App.
